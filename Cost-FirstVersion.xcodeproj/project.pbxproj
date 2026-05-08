@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C7E8137E2FA8770400544F43 /* Build configuration list for PBXProject "Cost-FistVirtion" */;
+			buildConfigurationList = C7E8137E2FA8770400544F43 /* Build configuration list for PBXProject "Cost-FirstVersion" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -306,7 +306,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C7E8137E2FA8770400544F43 /* Build configuration list for PBXProject "Cost-FistVirtion" */ = {
+		C7E8137E2FA8770400544F43 /* Build configuration list for PBXProject "Cost-FirstVersion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C7E8138C2FA8770700544F43 /* Debug */,

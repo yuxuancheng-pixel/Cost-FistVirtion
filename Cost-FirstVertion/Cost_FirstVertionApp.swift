@@ -7,35 +7,47 @@
 
 import SwiftUI
 
+// MARK: - APP ENTRY
+
+@main
+struct CostSavingPrototypeApp: App {
+    
+    var body: some Scene {
+        
+        WindowGroup {
+            RenturnMainView()
+        }
+    }
+}
+
 // MARK: - DATA MODEL
 
 struct Item: Identifiable {
+    
     let id = UUID()
     let name: String
     let rentPrice: Int
     let buyPrice: Int
-    let image: String
 }
 
 // MARK: - SAMPLE DATA
 
 let items = [
+    
     Item(
         name: "Re-Nylon Bomber Jacket",
         rentPrice: 15,
-        buyPrice: 180,
-        image: "jacket"
+        buyPrice: 180
     ),
     
     Item(
         name: "Vintage Camera",
         rentPrice: 10,
-        buyPrice: 120,
-        image: "camera"
+        buyPrice: 120
     )
 ]
 
-// MARK: - MAIN APP VIEW
+// MARK: - MAIN VIEW
 
 struct RenturnMainView: View {
     
@@ -53,12 +65,14 @@ struct RenturnMainView: View {
                 }
                 .tag(0)
             
+            
             InboxView()
                 .tabItem {
                     Image(systemName: "message")
                     Text("Inbox")
                 }
                 .tag(1)
+            
             
             ProfileView(totalSaved: $totalSaved)
                 .tabItem {
@@ -71,7 +85,7 @@ struct RenturnMainView: View {
     }
 }
 
-// MARK: - EXPLORE PAGE
+// MARK: - EXPLORE VIEW
 
 struct ExploreView: View {
     
@@ -129,7 +143,7 @@ struct ExploreView: View {
                             .font(.title3)
                             .bold()
                         
-                        Text("Rent instead of buy to grow your garden.")
+                        Text("Rent instead of buying to grow your garden.")
                             .foregroundColor(.gray)
                     }
                     .padding()
@@ -139,7 +153,7 @@ struct ExploreView: View {
                     .padding(.horizontal)
                     
                     
-                    // ITEMS
+                    // ITEM CARDS
                     
                     ForEach(items) { item in
                         
@@ -154,10 +168,8 @@ struct ExploreView: View {
                             
                             VStack(alignment: .leading) {
                                 
-                                // IMAGE
-                                
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color(.systemGray5))
+                                    .fill(Color.gray.opacity(0.15))
                                     .frame(height: 240)
                                     .overlay(
                                         Image(systemName: "photo")
@@ -222,7 +234,7 @@ struct ExploreView: View {
     }
 }
 
-// MARK: - ITEM DETAIL
+// MARK: - ITEM DETAIL VIEW
 
 struct ItemDetailView: View {
     
@@ -241,7 +253,7 @@ struct ItemDetailView: View {
         VStack(spacing: 20) {
             
             RoundedRectangle(cornerRadius: 25)
-                .fill(Color(.systemGray5))
+                .fill(Color.gray.opacity(0.15))
                 .frame(height: 320)
                 .overlay(
                     Image(systemName: "photo")
@@ -323,18 +335,20 @@ struct ItemDetailView: View {
             }
             
             
+            // FIXED VERSION
+            
             NavigationLink(
-                destination: ConfirmationView(totalSaved: totalSaved),
-                isActive: $showConfirmation
+                destination: ConfirmationView(totalSaved: totalSaved)
             ) {
+                
                 EmptyView()
             }
+            .opacity(0)
         }
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-// MARK: - CONFIRMATION PAGE
+// MARK: - CONFIRMATION VIEW
 
 struct ConfirmationView: View {
     
@@ -423,7 +437,7 @@ struct ConfirmationView: View {
     }
 }
 
-// MARK: - PROFILE PAGE
+// MARK: - PROFILE VIEW
 
 struct ProfileView: View {
     
@@ -434,8 +448,6 @@ struct ProfileView: View {
         ScrollView {
             
             VStack(spacing: 20) {
-                
-                // PROFILE HEADER
                 
                 VStack(spacing: 10) {
                     
@@ -455,8 +467,6 @@ struct ProfileView: View {
                         .foregroundColor(.gray)
                 }
                 
-                
-                // GARDEN CARD
                 
                 VStack(alignment: .leading, spacing: 15) {
                     
@@ -499,8 +509,6 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 
                 
-                // RECENT SAVINGS
-                
                 VStack(alignment: .leading, spacing: 15) {
                     
                     Text("Recent Savings")
@@ -541,7 +549,7 @@ struct ProfileView: View {
                 .font(.title)
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color.gray.opacity(0.1))
         .cornerRadius(18)
     }
     
@@ -568,7 +576,7 @@ struct ProfileView: View {
     }
 }
 
-// MARK: - INBOX
+// MARK: - INBOX VIEW
 
 struct InboxView: View {
     
