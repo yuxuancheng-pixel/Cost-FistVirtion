@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		C7E813832FA8770400544F43 /* Cost-FistVirtion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost-FistVirtion.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7E813832FA8770400544F43 /* Cost-FirstVersion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost-FirstVersion.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C7E813852FA8770400544F43 /* Cost-FistVirtion */ = {
+		C7E813852FA8770400544F43 /* Cost-FirstVertion */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Cost-FistVirtion";
+			path = "Cost-FirstVertion";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		C7E8137A2FA8770400544F43 = {
 			isa = PBXGroup;
 			children = (
-				C7E813852FA8770400544F43 /* Cost-FistVirtion */,
+				C7E813852FA8770400544F43 /* Cost-FirstVertion */,
 				C7E813842FA8770400544F43 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		C7E813842FA8770400544F43 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C7E813832FA8770400544F43 /* Cost-FistVirtion.app */,
+				C7E813832FA8770400544F43 /* Cost-FirstVersion.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C7E813822FA8770400544F43 /* Cost-FistVirtion */ = {
+		C7E813822FA8770400544F43 /* Cost-FirstVersion */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C7E8138E2FA8770700544F43 /* Build configuration list for PBXNativeTarget "Cost-FistVirtion" */;
+			buildConfigurationList = C7E8138E2FA8770700544F43 /* Build configuration list for PBXNativeTarget "Cost-FirstVersion" */;
 			buildPhases = (
 				C7E8137F2FA8770400544F43 /* Sources */,
 				C7E813802FA8770400544F43 /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C7E813852FA8770400544F43 /* Cost-FistVirtion */,
+				C7E813852FA8770400544F43 /* Cost-FirstVertion */,
 			);
-			name = "Cost-FistVirtion";
+			name = "Cost-FirstVersion";
 			packageProductDependencies = (
 			);
 			productName = "Cost-FistVirtion";
-			productReference = C7E813832FA8770400544F43 /* Cost-FistVirtion.app */;
+			productReference = C7E813832FA8770400544F43 /* Cost-FirstVersion.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C7E813822FA8770400544F43 /* Cost-FistVirtion */,
+				C7E813822FA8770400544F43 /* Cost-FirstVersion */,
 			);
 		};
 /* End PBXProject section */
@@ -315,7 +315,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C7E8138E2FA8770700544F43 /* Build configuration list for PBXNativeTarget "Cost-FistVirtion" */ = {
+		C7E8138E2FA8770700544F43 /* Build configuration list for PBXNativeTarget "Cost-FirstVersion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C7E8138F2FA8770700544F43 /* Debug */,
