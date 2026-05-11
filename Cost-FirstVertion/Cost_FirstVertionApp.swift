@@ -7,605 +7,581 @@
 
 import SwiftUI
 
-// MARK: - APP ENTRY
+// =======================================
+// RENTURN APP
+// =======================================
 
 @main
-struct CostSavingPrototypeApp: App {
-    
+struct RenturnApp: App {
+
     var body: some Scene {
-        
+
         WindowGroup {
-            RenturnMainView()
+
+            iPhoneFrame {
+
+                MainTabView()
+            }
         }
     }
 }
 
-// MARK: - DATA MODEL
+// =======================================
+// DATA MODEL
+// =======================================
 
-struct Item: Identifiable {
-    
+struct Product: Identifiable {
+
     let id = UUID()
+
     let name: String
+    let category: String
     let rentPrice: Int
     let buyPrice: Int
+    let carbonSaved: Int
 }
 
-// MARK: - SAMPLE DATA
+// =======================================
+// SAMPLE DATA
+// =======================================
 
-let items = [
-    
-    Item(
-        name: "Re-Nylon Bomber Jacket",
-        rentPrice: 15,
-        buyPrice: 180
+let products = [
+
+    Product(
+        name: "Prada Re-Nylon Jacket",
+        category: "Vintage",
+        rentPrice: 45,
+        buyPrice: 180,
+        carbonSaved: 12
     ),
-    
-    Item(
-        name: "Vintage Camera",
-        rentPrice: 10,
-        buyPrice: 120
+
+    Product(
+        name: "Retro Camera",
+        category: "Photography",
+        rentPrice: 12,
+        buyPrice: 140,
+        carbonSaved: 6
+    ),
+
+    Product(
+        name: "Party Speaker",
+        category: "Party",
+        rentPrice: 20,
+        buyPrice: 260,
+        carbonSaved: 9
     )
 ]
 
-// MARK: - MAIN VIEW
+// =======================================
+// MAIN TAB VIEW
+// =======================================
 
-struct RenturnMainView: View {
-    
-    @State private var selectedTab = 0
-    @State private var totalSaved = 65
-    
+struct MainTabView: View {
+
+    @State private var totalSaved = 120
+
     var body: some View {
-        
-        TabView(selection: $selectedTab) {
-            
+
+        TabView {
+
             ExploreView(totalSaved: $totalSaved)
                 .tabItem {
+
                     Image(systemName: "safari")
                     Text("Explore")
                 }
-                .tag(0)
-            
-            
+
             InboxView()
                 .tabItem {
+
                     Image(systemName: "message")
                     Text("Inbox")
                 }
-                .tag(1)
-            
-            
+
             ProfileView(totalSaved: $totalSaved)
                 .tabItem {
+
                     Image(systemName: "person")
                     Text("Profile")
                 }
-                .tag(2)
         }
-        .accentColor(.blue)
+        .tint(
+            Color(
+                red: 20/255,
+                green: 63/255,
+                blue: 150/255
+            )
+        )
     }
 }
 
-// MARK: - EXPLORE VIEW
+// =======================================
+// EXPLORE VIEW
+// =======================================
 
 struct ExploreView: View {
-    
+
     @Binding var totalSaved: Int
-    
+
+    @State private var searchText = ""
+
+    let tags = [
+        "Prada",
+        "Wedding",
+        "Vintage",
+        "Camera",
+        "Party"
+    ]
+
     var body: some View {
-        
+
         NavigationStack {
-            
-            ScrollView {
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    
+
+            ScrollView(showsIndicators: false) {
+
+                VStack(alignment: .leading, spacing: 24) {
+
                     // HEADER
-                    
+
                     HStack {
-                        
+
                         Text("Renturn")
-                            .font(.title2)
+                            .font(.largeTitle)
                             .bold()
-                        
+                            .foregroundColor(.blue)
+
                         Spacer()
-                        
+
                         Image(systemName: "bag")
+                            .font(.title2)
                     }
-                    .padding(.horizontal)
-                    
-                    
+
                     // SEARCH BAR
-                    
+
                     HStack {
-                        
+
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
-                        
-                        Text("Search brands, styles...")
-                            .foregroundColor(.gray)
-                        
-                        Spacer()
+
+                        TextField(
+                            "Search brands, styles...",
+                            text: $searchText
+                        )
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(15)
-                    .padding(.horizontal)
-                    
-                    
-                    // SAVING BANNER
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        
+                    .background(Color.white)
+                    .cornerRadius(18)
+
+                    // TAGS
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+
+                        HStack(spacing: 12) {
+
+                            ForEach(tags, id: \.self) { tag in
+
+                                Text(tag)
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 10)
+                                    .background(Color.white)
+                                    .cornerRadius(20)
+                            }
+                        }
+                    }
+
+                    // SAVING GARDEN
+
+                    VStack(alignment: .leading, spacing: 12) {
+
                         Text("🌱 Saving Garden")
                             .font(.headline)
-                        
+
                         Text("You saved $\(totalSaved)")
-                            .font(.title3)
+                            .font(.largeTitle)
                             .bold()
-                        
+
                         Text("Rent instead of buying to grow your garden.")
                             .foregroundColor(.gray)
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.green.opacity(0.15))
-                    .cornerRadius(20)
-                    .padding(.horizontal)
-                    
-                    
-                    // ITEM CARDS
-                    
-                    ForEach(items) { item in
-                        
+                    .background(Color.green.opacity(0.12))
+                    .cornerRadius(30)
+
+                    // PRODUCTS
+
+                    ForEach(products) { product in
+
                         NavigationLink {
-                            
-                            ItemDetailView(
-                                item: item,
+
+                            ProductDetailView(
+                                product: product,
                                 totalSaved: $totalSaved
                             )
-                            
+
                         } label: {
-                            
-                            VStack(alignment: .leading) {
-                                
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.gray.opacity(0.15))
-                                    .frame(height: 240)
+
+                            VStack(alignment: .leading, spacing: 18) {
+
+                                RoundedRectangle(cornerRadius: 28)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(height: 250)
                                     .overlay(
+
                                         Image(systemName: "photo")
-                                            .font(.largeTitle)
+                                            .font(.system(size: 45))
                                             .foregroundColor(.gray)
                                     )
-                                
-                                
-                                VStack(alignment: .leading, spacing: 10) {
-                                    
-                                    Text(item.name)
-                                        .font(.title3)
+
+                                VStack(alignment: .leading, spacing: 12) {
+
+                                    Text(product.category.uppercased())
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+
+                                    Text(product.name)
+                                        .font(.title2)
                                         .bold()
                                         .foregroundColor(.black)
-                                    
-                                    
+
                                     HStack {
-                                        
+
                                         VStack(alignment: .leading) {
-                                            
-                                            Text("Rent")
-                                                .font(.caption)
-                                                .foregroundColor(.gray)
-                                            
-                                            Text("$\(item.rentPrice)")
-                                                .font(.title2)
+
+                                            Text("$\(product.rentPrice)")
+                                                .font(.largeTitle)
                                                 .bold()
                                                 .foregroundColor(.blue)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        VStack(alignment: .trailing) {
-                                            
-                                            Text("Buy")
+
+                                            Text("DAILY RENT")
                                                 .font(.caption)
                                                 .foregroundColor(.gray)
-                                            
-                                            Text("$\(item.buyPrice)")
-                                                .font(.title3)
+                                        }
+
+                                        Spacer()
+
+                                        VStack(alignment: .trailing) {
+
+                                            Text("Buy $\(product.buyPrice)")
                                                 .foregroundColor(.gray)
+
+                                            Text("Save $\(product.buyPrice - product.rentPrice)")
+                                                .foregroundColor(.green)
+                                                .bold()
                                         }
                                     }
-                                    
-                                    
-                                    Text("💰 Save $\(item.buyPrice - item.rentPrice)")
+
+                                    Text("🌿 Save \(product.carbonSaved)kg carbon")
                                         .foregroundColor(.green)
-                                        .bold()
+
+                                    Text("Renting helps reduce fashion waste and unnecessary purchasing.")
+                                        .foregroundColor(.gray)
+
+                                    Text("Tap to view product details")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
                                 }
-                                .padding()
                             }
+                            .padding()
                             .background(Color.white)
-                            .cornerRadius(25)
-                            .shadow(radius: 2)
-                            .padding(.horizontal)
+                            .cornerRadius(30)
                         }
                     }
                 }
-                .padding(.bottom, 40)
+                .padding()
+                .padding(.bottom, 100)
             }
-        }
-    }
-}
-
-// MARK: - ITEM DETAIL VIEW
-
-struct ItemDetailView: View {
-    
-    let item: Item
-    
-    @Binding var totalSaved: Int
-    
-    @State private var showConfirmation = false
-    
-    var savedAmount: Int {
-        item.buyPrice - item.rentPrice
-    }
-    
-    var body: some View {
-        
-        VStack(spacing: 20) {
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.gray.opacity(0.15))
-                .frame(height: 320)
-                .overlay(
-                    Image(systemName: "photo")
-                        .font(.largeTitle)
-                        .foregroundColor(.gray)
+            .background(
+                Color(
+                    red: 248/255,
+                    green: 245/255,
+                    blue: 240/255
                 )
-                .padding()
-            
-            
-            VStack(alignment: .leading, spacing: 15) {
-                
-                Text(item.name)
-                    .font(.largeTitle)
-                    .bold()
-                
-                
-                HStack {
-                    
-                    VStack(alignment: .leading) {
-                        
-                        Text("Rent")
-                            .foregroundColor(.gray)
-                        
-                        Text("$\(item.rentPrice)")
-                            .font(.title)
-                            .bold()
-                            .foregroundColor(.blue)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing) {
-                        
-                        Text("Buy")
-                            .foregroundColor(.gray)
-                        
-                        Text("$\(item.buyPrice)")
-                            .font(.title2)
-                    }
-                }
-                
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    Text("💰 You Save $\(savedAmount)")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.green)
-                    
-                    Text("🌱 Renting helps grow your Saving Garden")
-                        .foregroundColor(.green)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.green.opacity(0.1))
-                .cornerRadius(20)
-            }
-            .padding(.horizontal)
-            
-            
-            Spacer()
-            
-            
-            Button {
-                
-                totalSaved += savedAmount
-                showConfirmation = true
-                
-            } label: {
-                
-                Text("Rent for $\(item.rentPrice)")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(20)
-                    .padding(.horizontal)
-            }
-            
-            
-            // FIXED VERSION
-            
-            NavigationLink(
-                destination: ConfirmationView(totalSaved: totalSaved)
-            ) {
-                
-                EmptyView()
-            }
-            .opacity(0)
+            )
         }
     }
 }
 
-// MARK: - CONFIRMATION VIEW
+// =======================================
+// PRODUCT DETAIL VIEW
+// =======================================
 
-struct ConfirmationView: View {
-    
-    let totalSaved: Int
-    
+struct ProductDetailView: View {
+
+    let product: Product
+
+    @Binding var totalSaved: Int
+
+    @State private var showConfirmation = false
+
     var body: some View {
-        
-        VStack(spacing: 25) {
-            
+
+        ScrollView {
+
+            VStack(alignment: .leading, spacing: 24) {
+
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(height: 360)
+                    .overlay(
+
+                        Image(systemName: "photo")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                    )
+
+                VStack(alignment: .leading, spacing: 18) {
+
+                    Text(product.name)
+                        .font(.largeTitle)
+                        .bold()
+
+                    Text(product.category)
+                        .foregroundColor(.gray)
+
+                    HStack {
+
+                        VStack(alignment: .leading, spacing: 8) {
+
+                            Text("$\(product.rentPrice)")
+                                .font(.largeTitle)
+                                .bold()
+                                .foregroundColor(.blue)
+
+                            Text("DAILY RENT")
+                                .foregroundColor(.gray)
+                        }
+
+                        Spacer()
+
+                        VStack(alignment: .trailing, spacing: 8) {
+
+                            Text("Buy $\(product.buyPrice)")
+                                .foregroundColor(.gray)
+
+                            Text("Save $\(product.buyPrice - product.rentPrice)")
+                                .foregroundColor(.green)
+                                .bold()
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+
+                        Text("Sustainability Impact")
+                            .font(.headline)
+
+                        HStack {
+
+                            Image(systemName: "leaf.fill")
+                                .foregroundColor(.green)
+
+                            Text("\(product.carbonSaved)kg carbon emission reduced")
+                        }
+
+                        HStack {
+
+                            Image(systemName: "dollarsign.circle.fill")
+                                .foregroundColor(.green)
+
+                            Text("Save $\(product.buyPrice - product.rentPrice)")
+                        }
+                    }
+                    .padding()
+                    .background(Color.green.opacity(0.1))
+                    .cornerRadius(20)
+
+                    Text("Renting this item helps reduce overconsumption and extends the product lifecycle.")
+                        .foregroundColor(.gray)
+
+                    Button {
+
+                        totalSaved += (product.buyPrice - product.rentPrice)
+
+                        showConfirmation = true
+
+                    } label: {
+
+                        Text("Rent Now")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(20)
+                    }
+                }
+                .padding()
+            }
+            .padding(.bottom, 100)
+        }
+        .background(
+            Color(
+                red: 248/255,
+                green: 245/255,
+                blue: 240/255
+            )
+        )
+        .sheet(isPresented: $showConfirmation) {
+
+            RentConfirmationView(
+                product: product
+            )
+        }
+    }
+}
+
+// =======================================
+// RENT CONFIRMATION
+// =======================================
+
+struct RentConfirmationView: View {
+
+    @Environment(\.dismiss) var dismiss
+
+    let product: Product
+
+    var body: some View {
+
+        VStack(spacing: 30) {
+
             Spacer()
-            
-            VStack(spacing: 15) {
-                
+
+            VStack(spacing: 20) {
+
                 Text("🎉 Rental Confirmed!")
                     .font(.largeTitle)
                     .bold()
-                
-                Text("You saved $\(totalSaved)")
+
+                Text("You saved $\(product.buyPrice - product.rentPrice)")
                     .font(.title2)
-                    .foregroundColor(.green)
-                
+                    .bold()
+
                 Text("🌱 Your garden has grown!")
-                    .font(.headline)
                     .foregroundColor(.green)
+
+                Text("🌿 Reduced \(product.carbonSaved)kg carbon emission")
+                    .foregroundColor(.green)
+
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Color.green.opacity(0.1))
+                    .frame(height: 180)
+                    .overlay(
+
+                        Text("🌱 🌿 🌳")
+                            .font(.system(size: 60))
+                    )
             }
             .padding()
-            .background(Color.green.opacity(0.12))
-            .cornerRadius(25)
-            
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.green.opacity(0.2))
-                .frame(height: 180)
-                .overlay(
-                    VStack {
-                        
-                        Text(gardenEmoji())
-                            .font(.system(size: 70))
-                        
-                        Text(gardenLevel())
-                            .font(.headline)
-                    }
-                )
-            
-            
-            NavigationLink {
-                
-                ProfileView(totalSaved: .constant(totalSaved))
-                
+
+            Button {
+
+                dismiss()
+
             } label: {
-                
-                Text("View Saving Garden")
+
+                Text("Continue")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
                     .cornerRadius(20)
-                    .padding(.horizontal)
             }
-            
+            .padding()
+
             Spacer()
-        }
-        .padding()
-    }
-    
-    func gardenEmoji() -> String {
-        
-        if totalSaved < 100 {
-            return "🌱"
-        } else if totalSaved < 250 {
-            return "🌿"
-        } else {
-            return "🌳"
-        }
-    }
-    
-    func gardenLevel() -> String {
-        
-        if totalSaved < 100 {
-            return "Seedling Garden"
-        } else if totalSaved < 250 {
-            return "Growing Garden"
-        } else {
-            return "Saving Forest"
         }
     }
 }
 
-// MARK: - PROFILE VIEW
+// =======================================
+// IPHONE FRAME
+// =======================================
 
-struct ProfileView: View {
-    
-    @Binding var totalSaved: Int
-    
+struct iPhoneFrame<Content: View>: View {
+
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+
+        self.content = content()
+    }
+
     var body: some View {
-        
-        ScrollView {
-            
-            VStack(spacing: 20) {
-                
-                VStack(spacing: 10) {
-                    
-                    Circle()
-                        .fill(Color.green.opacity(0.3))
-                        .frame(width: 90, height: 90)
-                        .overlay(
-                            Text("🌱")
-                                .font(.largeTitle)
-                        )
-                    
-                    Text("VogueVintage")
-                        .font(.title2)
-                        .bold()
-                    
-                    Text("@gabe_curtiss")
-                        .foregroundColor(.gray)
-                }
-                
-                
-                VStack(alignment: .leading, spacing: 15) {
-                    
-                    Text("Your Saving Garden")
-                        .font(.headline)
-                    
-                    
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(Color.green.opacity(0.15))
-                        .frame(height: 160)
-                        .overlay(
-                            VStack(spacing: 12) {
-                                
-                                Text(gardenEmoji())
-                                    .font(.system(size: 65))
-                                
-                                Text(gardenLevel())
-                                    .font(.headline)
-                            }
-                        )
-                    
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        
-                        Text("💰 Saved $\(totalSaved)")
-                            .font(.title3)
-                            .bold()
-                        
-                        Text("🌱 Grow your garden +1")
-                            .foregroundColor(.green)
-                        
-                        Text("♻️ Reduced carbon footprint")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding()
-                .background(Color.white)
-                .cornerRadius(25)
-                .shadow(radius: 2)
-                .padding(.horizontal)
-                
-                
-                VStack(alignment: .leading, spacing: 15) {
-                    
-                    Text("Recent Savings")
-                        .font(.headline)
-                    
-                    savingCard(
-                        title: "Prada Jacket",
-                        amount: "$165 Saved"
+
+        ZStack {
+
+            Color.black
+                .ignoresSafeArea()
+
+            ZStack(alignment: .top) {
+
+                RoundedRectangle(cornerRadius: 60)
+                    .fill(Color.black)
+                    .frame(width: 410, height: 880)
+
+                content
+                    .frame(width: 393, height: 852)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 45)
                     )
-                    
-                    savingCard(
-                        title: "Vintage Camera",
-                        amount: "$110 Saved"
-                    )
-                }
-                .padding(.horizontal)
+
+                Capsule()
+                    .fill(Color.black)
+                    .frame(width: 140, height: 36)
+                    .padding(.top, 12)
             }
-            .padding(.top)
-        }
-    }
-    
-    func savingCard(title: String, amount: String) -> some View {
-        
-        HStack {
-            
-            VStack(alignment: .leading) {
-                
-                Text(title)
-                    .bold()
-                
-                Text(amount)
-                    .foregroundColor(.green)
-            }
-            
-            Spacer()
-            
-            Text("🌱")
-                .font(.title)
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(18)
-    }
-    
-    func gardenEmoji() -> String {
-        
-        if totalSaved < 100 {
-            return "🌱"
-        } else if totalSaved < 250 {
-            return "🌿"
-        } else {
-            return "🌳"
-        }
-    }
-    
-    func gardenLevel() -> String {
-        
-        if totalSaved < 100 {
-            return "Seedling Garden"
-        } else if totalSaved < 250 {
-            return "Growing Garden"
-        } else {
-            return "Saving Forest"
         }
     }
 }
 
-// MARK: - INBOX VIEW
+// =======================================
+// INBOX
+// =======================================
 
 struct InboxView: View {
-    
+
     var body: some View {
-        
-        VStack(spacing: 20) {
-            
-            Spacer()
-            
-            Image(systemName: "message")
-                .font(.system(size: 70))
-                .foregroundColor(.blue)
-            
-            Text("Inbox")
-                .font(.largeTitle)
-                .bold()
-            
-            Text("Chat with renters and organise pickup times.")
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            Spacer()
+
+        NavigationStack {
+
+            VStack {
+
+                Text("Inbox")
+                    .font(.largeTitle)
+                    .bold()
+
+                Spacer()
+            }
+            .padding()
         }
     }
 }
 
-// MARK: - PREVIEW
+// =======================================
+// PROFILE
+// =======================================
 
-#Preview {
-    RenturnMainView()
+struct ProfileView: View {
+
+    @Binding var totalSaved: Int
+
+    var body: some View {
+
+        NavigationStack {
+
+            VStack {
+
+                Text("Profile")
+                    .font(.largeTitle)
+                    .bold()
+
+                Text("Total Saved: $\(totalSaved)")
+                    .font(.title2)
+
+                Spacer()
+            }
+            .padding()
+        }
+    }
 }
