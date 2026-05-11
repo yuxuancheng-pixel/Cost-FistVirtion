@@ -27,7 +27,7 @@ struct RenturnApp: App {
 }
 
 // =======================================
-// DATA MODEL
+// MODELS
 // =======================================
 
 struct Product: Identifiable {
@@ -39,6 +39,15 @@ struct Product: Identifiable {
     let rentPrice: Int
     let buyPrice: Int
     let carbonSaved: Int
+}
+
+struct ChatUser: Identifiable {
+
+    let id = UUID()
+
+    let name: String
+    let message: String
+    let time: String
 }
 
 // =======================================
@@ -69,6 +78,27 @@ let products = [
         rentPrice: 20,
         buyPrice: 260,
         carbonSaved: 9
+    )
+]
+
+let chats = [
+
+    ChatUser(
+        name: "@alex_curates",
+        message: "Hey! Is the Prada jacket available this weekend?",
+        time: "1m ago"
+    ),
+
+    ChatUser(
+        name: "@sarah_style",
+        message: "Can I extend the rental for one more day?",
+        time: "12m ago"
+    ),
+
+    ChatUser(
+        name: "@camera_house",
+        message: "Please return before Friday 😊",
+        time: "1h ago"
     )
 ]
 
@@ -116,6 +146,47 @@ struct MainTabView: View {
 }
 
 // =======================================
+// IPHONE FRAME
+// =======================================
+
+struct iPhoneFrame<Content: View>: View {
+
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+
+        self.content = content()
+    }
+
+    var body: some View {
+
+        ZStack {
+
+            Color.black
+                .ignoresSafeArea()
+
+            ZStack(alignment: .top) {
+
+                RoundedRectangle(cornerRadius: 60)
+                    .fill(Color.black)
+                    .frame(width: 410, height: 880)
+
+                content
+                    .frame(width: 393, height: 852)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 45)
+                    )
+
+                Capsule()
+                    .fill(Color.black)
+                    .frame(width: 140, height: 36)
+                    .padding(.top, 12)
+            }
+        }
+    }
+}
+
+// =======================================
 // EXPLORE VIEW
 // =======================================
 
@@ -141,8 +212,6 @@ struct ExploreView: View {
 
                 VStack(alignment: .leading, spacing: 24) {
 
-                    // HEADER
-
                     HStack {
 
                         Text("Renturn")
@@ -156,7 +225,7 @@ struct ExploreView: View {
                             .font(.title2)
                     }
 
-                    // SEARCH BAR
+                    // SEARCH
 
                     HStack {
 
@@ -170,7 +239,7 @@ struct ExploreView: View {
                     }
                     .padding()
                     .background(Color.white)
-                    .cornerRadius(18)
+                    .cornerRadius(20)
 
                     // TAGS
 
@@ -181,7 +250,6 @@ struct ExploreView: View {
                             ForEach(tags, id: \.self) { tag in
 
                                 Text(tag)
-                                    .font(.subheadline)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 10)
                                     .background(Color.white)
@@ -275,9 +343,6 @@ struct ExploreView: View {
                                     Text("🌿 Save \(product.carbonSaved)kg carbon")
                                         .foregroundColor(.green)
 
-                                    Text("Renting helps reduce fashion waste and unnecessary purchasing.")
-                                        .foregroundColor(.gray)
-
                                     Text("Tap to view product details")
                                         .font(.caption)
                                         .foregroundColor(.blue)
@@ -304,7 +369,7 @@ struct ExploreView: View {
 }
 
 // =======================================
-// PRODUCT DETAIL VIEW
+// PRODUCT DETAIL
 // =======================================
 
 struct ProductDetailView: View {
@@ -313,7 +378,7 @@ struct ProductDetailView: View {
 
     @Binding var totalSaved: Int
 
-    @State private var showConfirmation = false
+    @State private var showPopup = false
 
     var body: some View {
 
@@ -323,15 +388,9 @@ struct ProductDetailView: View {
 
                 RoundedRectangle(cornerRadius: 30)
                     .fill(Color.gray.opacity(0.2))
-                    .frame(height: 360)
-                    .overlay(
+                    .frame(height: 350)
 
-                        Image(systemName: "photo")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                    )
-
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 20) {
 
                     Text(product.name)
                         .font(.largeTitle)
@@ -342,7 +401,7 @@ struct ProductDetailView: View {
 
                     HStack {
 
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading) {
 
                             Text("$\(product.rentPrice)")
                                 .font(.largeTitle)
@@ -355,7 +414,7 @@ struct ProductDetailView: View {
 
                         Spacer()
 
-                        VStack(alignment: .trailing, spacing: 8) {
+                        VStack(alignment: .trailing) {
 
                             Text("Buy $\(product.buyPrice)")
                                 .foregroundColor(.gray)
@@ -368,42 +427,26 @@ struct ProductDetailView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
 
-                        Text("Sustainability Impact")
+                        Text("Carbon + Cost Saving")
                             .font(.headline)
 
-                        HStack {
+                        Text("🌱 \(product.carbonSaved)kg CO₂ reduced")
 
-                            Image(systemName: "leaf.fill")
-                                .foregroundColor(.green)
-
-                            Text("\(product.carbonSaved)kg carbon emission reduced")
-                        }
-
-                        HStack {
-
-                            Image(systemName: "dollarsign.circle.fill")
-                                .foregroundColor(.green)
-
-                            Text("Save $\(product.buyPrice - product.rentPrice)")
-                        }
+                        Text("💰 Save $\(product.buyPrice - product.rentPrice)")
                     }
                     .padding()
-                    .background(Color.green.opacity(0.1))
+                    .background(Color.green.opacity(0.12))
                     .cornerRadius(20)
-
-                    Text("Renting this item helps reduce overconsumption and extends the product lifecycle.")
-                        .foregroundColor(.gray)
 
                     Button {
 
                         totalSaved += (product.buyPrice - product.rentPrice)
 
-                        showConfirmation = true
+                        showPopup = true
 
                     } label: {
 
                         Text("Rent Now")
-                            .font(.headline)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -413,7 +456,6 @@ struct ProductDetailView: View {
                 }
                 .padding()
             }
-            .padding(.bottom, 100)
         }
         .background(
             Color(
@@ -422,20 +464,18 @@ struct ProductDetailView: View {
                 blue: 240/255
             )
         )
-        .sheet(isPresented: $showConfirmation) {
+        .sheet(isPresented: $showPopup) {
 
-            RentConfirmationView(
-                product: product
-            )
+            ConfirmationPopup(product: product)
         }
     }
 }
 
 // =======================================
-// RENT CONFIRMATION
+// RENT POPUP
 // =======================================
 
-struct RentConfirmationView: View {
+struct ConfirmationPopup: View {
 
     @Environment(\.dismiss) var dismiss
 
@@ -447,32 +487,23 @@ struct RentConfirmationView: View {
 
             Spacer()
 
-            VStack(spacing: 20) {
+            Text("🎉 Rental Confirmed!")
+                .font(.largeTitle)
+                .bold()
 
-                Text("🎉 Rental Confirmed!")
-                    .font(.largeTitle)
-                    .bold()
+            Text("You saved $\(product.buyPrice - product.rentPrice)")
+                .font(.title2)
 
-                Text("You saved $\(product.buyPrice - product.rentPrice)")
-                    .font(.title2)
-                    .bold()
+            Text("🌱 Reduced \(product.carbonSaved)kg carbon")
 
-                Text("🌱 Your garden has grown!")
-                    .foregroundColor(.green)
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.green.opacity(0.1))
+                .frame(height: 180)
+                .overlay(
 
-                Text("🌿 Reduced \(product.carbonSaved)kg carbon emission")
-                    .foregroundColor(.green)
-
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(Color.green.opacity(0.1))
-                    .frame(height: 180)
-                    .overlay(
-
-                        Text("🌱 🌿 🌳")
-                            .font(.system(size: 60))
-                    )
-            }
-            .padding()
+                    Text("🌱 🌿 🌳")
+                        .font(.system(size: 60))
+                )
 
             Button {
 
@@ -487,56 +518,15 @@ struct RentConfirmationView: View {
                     .background(Color.blue)
                     .cornerRadius(20)
             }
-            .padding()
 
             Spacer()
         }
+        .padding()
     }
 }
 
 // =======================================
-// IPHONE FRAME
-// =======================================
-
-struct iPhoneFrame<Content: View>: View {
-
-    let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-
-        self.content = content()
-    }
-
-    var body: some View {
-
-        ZStack {
-
-            Color.black
-                .ignoresSafeArea()
-
-            ZStack(alignment: .top) {
-
-                RoundedRectangle(cornerRadius: 60)
-                    .fill(Color.black)
-                    .frame(width: 410, height: 880)
-
-                content
-                    .frame(width: 393, height: 852)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 45)
-                    )
-
-                Capsule()
-                    .fill(Color.black)
-                    .frame(width: 140, height: 36)
-                    .padding(.top, 12)
-            }
-        }
-    }
-}
-
-// =======================================
-// INBOX
+// INBOX VIEW
 // =======================================
 
 struct InboxView: View {
@@ -545,43 +535,539 @@ struct InboxView: View {
 
         NavigationStack {
 
-            VStack {
+            ScrollView(showsIndicators: false) {
 
-                Text("Inbox")
-                    .font(.largeTitle)
-                    .bold()
+                VStack(alignment: .leading, spacing: 24) {
 
-                Spacer()
+                    HStack {
+
+                        Text("Inbox")
+                            .font(.largeTitle)
+                            .bold()
+
+                        Spacer()
+
+                        Image(systemName: "paperplane")
+                    }
+
+                    Text("RECENT ACTIVITY")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+
+                    activityCard(
+                        title: "Rental Confirmed",
+                        subtitle: "You saved $65 🌱"
+                    )
+
+                    activityCard(
+                        title: "Garden Grew +1",
+                        subtitle: "Your garden has grown 🌿"
+                    )
+
+                    Text("MESSAGES")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+
+                    ForEach(chats) { chat in
+
+                        NavigationLink {
+
+                            ChatDetailView(chat: chat)
+
+                        } label: {
+
+                            HStack(spacing: 16) {
+
+                                Circle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 62, height: 62)
+
+                                VStack(alignment: .leading, spacing: 8) {
+
+                                    HStack {
+
+                                        Text(chat.name)
+                                            .bold()
+                                            .foregroundColor(.black)
+
+                                        Spacer()
+
+                                        Text(chat.time)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+
+                                    Text(chat.message)
+                                        .foregroundColor(.gray)
+                                        .lineLimit(2)
+                                }
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(24)
+                        }
+                    }
+                }
+                .padding()
+                .padding(.bottom, 100)
             }
-            .padding()
+            .background(
+                Color(
+                    red: 248/255,
+                    green: 245/255,
+                    blue: 240/255
+                )
+            )
         }
+    }
+
+    func activityCard(
+        title: String,
+        subtitle: String
+    ) -> some View {
+
+        VStack(alignment: .leading, spacing: 10) {
+
+            Text(title)
+                .font(.headline)
+
+            Text(subtitle)
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.white)
+        .cornerRadius(24)
     }
 }
 
 // =======================================
-// PROFILE
+// CHAT DETAIL
+// =======================================
+
+struct ChatDetailView: View {
+
+    let chat: ChatUser
+
+    @State private var messageText = ""
+
+    var body: some View {
+
+        VStack {
+
+            ScrollView {
+
+                VStack(spacing: 18) {
+
+                    HStack {
+
+                        Text(chat.message)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(20)
+
+                        Spacer()
+                    }
+
+                    HStack {
+
+                        Spacer()
+
+                        Text("Thanks! I’ll return it 😊")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(20)
+                    }
+                }
+                .padding()
+            }
+
+            HStack {
+
+                TextField(
+                    "Message...",
+                    text: $messageText
+                )
+                .padding()
+                .background(Color.white)
+                .cornerRadius(18)
+
+                Button {
+
+                } label: {
+
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 52, height: 52)
+                        .overlay(
+
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(.white)
+                        )
+                }
+            }
+            .padding()
+        }
+        .navigationTitle(chat.name)
+        .background(
+            Color(
+                red: 248/255,
+                green: 245/255,
+                blue: 240/255
+            )
+        )
+    }
+}
+
+// =======================================
+// PROFILE VIEW
 // =======================================
 
 struct ProfileView: View {
 
     @Binding var totalSaved: Int
 
+    @State private var showGarden = false
+    @State private var showImpact = false
+
+    let days = Array(1...28)
+
+    let columns = Array(
+        repeating: GridItem(.flexible()),
+        count: 7
+    )
+
     var body: some View {
 
         NavigationStack {
 
-            VStack {
+            ScrollView {
 
-                Text("Profile")
-                    .font(.largeTitle)
+                VStack(alignment: .leading, spacing: 24) {
+
+                    HStack {
+
+                        Text("Renturn")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.blue)
+
+                        Spacer()
+
+                        Image(systemName: "bag")
+                    }
+
+                    HStack(alignment: .top) {
+
+                        Button {
+
+                            showImpact = true
+
+                        } label: {
+
+                            ZStack {
+
+                                Circle()
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [.green, .mint],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 8
+                                    )
+                                    .frame(width: 120, height: 120)
+
+                                Circle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 95, height: 95)
+                            }
+                        }
+
+                        Spacer()
+
+                        Button {
+
+                            showGarden = true
+
+                        } label: {
+
+                            Circle()
+                                .fill(Color.green.opacity(0.15))
+                                .frame(width: 60, height: 60)
+                                .overlay(
+
+                                    Text("🌱")
+                                )
+                        }
+                    }
+
+                    Text("vogue_vintage")
+                        .font(.title)
+                        .bold()
+
+                    Text("Vogue Vintage Boutique")
+                        .foregroundColor(.gray)
+
+                    HStack(spacing: 40) {
+
+                        statView(
+                            value: "4.9",
+                            title: "RATING"
+                        )
+
+                        statView(
+                            value: "28",
+                            title: "LISTINGS"
+                        )
+
+                        statView(
+                            value: "1.2k",
+                            title: "FOLLOWERS"
+                        )
+                    }
+
+                    HStack {
+
+                        Button {
+
+                        } label: {
+
+                            Text("List Item")
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .cornerRadius(20)
+                        }
+
+                        Button {
+
+                        } label: {
+
+                            Text("Edit Profile")
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(20)
+                        }
+                    }
+
+                    Text("Rental Planner")
+                        .font(.title)
+                        .bold()
+
+                    VStack(alignment: .leading, spacing: 20) {
+
+                        Text("February 2026")
+                            .font(.title2)
+                            .bold()
+
+                        LazyVGrid(columns: columns) {
+
+                            ForEach(days, id: \.self) { day in
+
+                                if day == 24 {
+
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.green)
+                                        .frame(height: 40)
+                                        .overlay(
+
+                                            Text("\(day)")
+                                                .foregroundColor(.white)
+                                        )
+
+                                } else if day == 27 {
+
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.orange)
+                                        .frame(height: 40)
+                                        .overlay(
+
+                                            Text("\(day)")
+                                                .foregroundColor(.white)
+                                        )
+
+                                } else {
+
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.08))
+                                        .frame(height: 40)
+                                        .overlay(
+
+                                            Text("\(day)")
+                                                .foregroundColor(.gray)
+                                        )
+                                }
+                            }
+                        }
+
+                        Text("📅 Rent Date: Feb 24")
+                            .foregroundColor(.green)
+
+                        Text("📦 Return Date: Feb 27")
+                            .foregroundColor(.orange)
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(30)
+                }
+                .padding()
+                .padding(.bottom, 100)
+            }
+            .background(
+                Color(
+                    red: 248/255,
+                    green: 245/255,
+                    blue: 240/255
+                )
+            )
+            .sheet(isPresented: $showGarden) {
+
+                SavingGardenView(totalSaved: totalSaved)
+            }
+            .sheet(isPresented: $showImpact) {
+
+                SustainabilityPopup(totalSaved: totalSaved)
+            }
+        }
+    }
+
+    func statView(
+        value: String,
+        title: String
+    ) -> some View {
+
+        VStack {
+
+            Text(value)
+                .bold()
+
+            Text(title)
+                .font(.caption2)
+                .foregroundColor(.gray)
+        }
+    }
+}
+
+// =======================================
+// SAVING GARDEN
+// =======================================
+
+struct SavingGardenView: View {
+
+    @Environment(\.dismiss) var dismiss
+
+    let totalSaved: Int
+
+    var body: some View {
+
+        VStack(spacing: 25) {
+
+            HStack {
+
+                Button {
+
+                    dismiss()
+
+                } label: {
+
+                    Image(systemName: "chevron.left")
+                }
+
+                Spacer()
+
+                Text("Saving Garden")
+                    .font(.title)
                     .bold()
-
-                Text("Total Saved: $\(totalSaved)")
-                    .font(.title2)
 
                 Spacer()
             }
-            .padding()
+
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.green.opacity(0.1))
+                .frame(height: 250)
+                .overlay(
+
+                    Text("🌱 🌿 🌳")
+                        .font(.system(size: 70))
+                )
+
+            Text("Total Saved: $\(totalSaved)")
+                .font(.title2)
+
+            Text("Level: Growing 🌿")
+
+            Spacer()
         }
+        .padding()
+    }
+}
+
+// =======================================
+// IMPACT POPUP
+// =======================================
+
+struct SustainabilityPopup: View {
+
+    @Environment(\.dismiss) var dismiss
+
+    let totalSaved: Int
+
+    var body: some View {
+
+        VStack(spacing: 25) {
+
+            HStack {
+
+                Text("Carbon+Cost-Saving")
+                    .font(.title2)
+                    .bold()
+
+                Spacer()
+
+                Button {
+
+                    dismiss()
+
+                } label: {
+
+                    Image(systemName: "xmark")
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 15) {
+
+                Text("🌱 CO₂ Saved: 5137kg")
+
+                Text("💰 Total Saved: $\(totalSaved)")
+
+                ProgressView(value: 0.8)
+                    .tint(.green)
+            }
+            .padding()
+            .background(Color.green.opacity(0.1))
+            .cornerRadius(24)
+
+            Button {
+
+                dismiss()
+
+            } label: {
+
+                Text("Keep it Green")
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(20)
+            }
+
+            Spacer()
+        }
+        .padding()
     }
 }
