@@ -1143,7 +1143,9 @@ struct SustainabilityImpactView: View {
 
     var body: some View {
 
-        VStack(spacing: 28) {
+        VStack(spacing: 30) {
+
+            // HEADER
 
             HStack {
 
@@ -1155,6 +1157,7 @@ struct SustainabilityImpactView: View {
 
                     Image(systemName: "chevron.left")
                         .foregroundColor(.black)
+                        .font(.title3)
                 }
 
                 Spacer()
@@ -1169,41 +1172,78 @@ struct SustainabilityImpactView: View {
 
             Spacer()
 
+            // MAIN IMPACT RING
+
             ZStack {
 
-                Circle()
-                    .stroke(
-                        Color.green.opacity(0.2),
-                        lineWidth: 20
-                    )
-                    .frame(width: 240)
+                // OUTER GLOW
 
                 Circle()
-                    .trim(from: 0, to: 0.78)
+                    .fill(
+                        RadialGradient(
+                            colors: [
+                                Color.green.opacity(0.25),
+                                Color.clear
+                            ],
+                            center: .center,
+                            startRadius: 40,
+                            endRadius: 140
+                        )
+                    )
+                    .frame(width: 300, height: 300)
+
+                // BACKGROUND RING
+
+                Circle()
                     .stroke(
-                        LinearGradient(
-                            colors: [.green, .blue],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                        Color.green.opacity(0.12),
+                        lineWidth: 24
+                    )
+                    .frame(width: 250)
+
+                // MAIN RING
+
+                Circle()
+                    .trim(from: 0, to: 0.82)
+                    .stroke(
+                        AngularGradient(
+                            gradient: Gradient(
+                                colors: [
+                                    .green,
+                                    .mint,
+                                    .blue,
+                                    .green
+                                ]
+                            ),
+                            center: .center
                         ),
                         style: StrokeStyle(
-                            lineWidth: 20,
+                            lineWidth: 24,
                             lineCap: .round
                         )
                     )
                     .rotationEffect(.degrees(-90))
-                    .frame(width: 240)
+                    .frame(width: 250)
+
+                // INNER WHITE CIRCLE
+
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 185)
+
+                // CENTER CONTENT
 
                 VStack(spacing: 14) {
 
-                    Text("5137.6kg")
-                        .font(.largeTitle)
+                    Text("5137")
+                        .font(.system(size: 42))
                         .bold()
 
-                    Text("Carbon Offset")
+                    Text("kg CO₂ Saved")
                         .foregroundColor(.gray)
 
                     Divider()
+                        .frame(width: 120)
 
                     Text("$\(totalSaved)")
                         .font(.title)
@@ -1211,8 +1251,61 @@ struct SustainabilityImpactView: View {
 
                     Text("Money Saved")
                         .foregroundColor(.gray)
+
+                    HStack(spacing: 6) {
+
+                        Image(systemName: "leaf.fill")
+
+                        Text("Eco Level 8")
+                            .bold()
+                    }
+                    .foregroundColor(.green)
                 }
             }
+
+            // IMPACT CARDS
+
+            HStack(spacing: 18) {
+
+                impactCard(
+                    icon: "leaf.fill",
+                    title: "Carbon Reduced",
+                    value: "5.1T"
+                )
+
+                impactCard(
+                    icon: "dollarsign.circle.fill",
+                    title: "Money Saved",
+                    value: "$\(totalSaved)"
+                )
+            }
+
+            // ACHIEVEMENT CARD
+
+            VStack(alignment: .leading, spacing: 14) {
+
+                Text("Achievements")
+                    .font(.headline)
+                    .bold()
+
+                achievementRow(
+                    emoji: "🌱",
+                    title: "Eco Beginner"
+                )
+
+                achievementRow(
+                    emoji: "🌿",
+                    title: "100kg Carbon Reduced"
+                )
+
+                achievementRow(
+                    emoji: "🌳",
+                    title: "Top Sustainable Renter"
+                )
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(28)
 
             Spacer()
         }
@@ -1225,10 +1318,67 @@ struct SustainabilityImpactView: View {
             )
         )
     }
+
+    // =======================================
+    // IMPACT CARD
+    // =======================================
+
+    func impactCard(
+        icon: String,
+        title: String,
+        value: String
+    ) -> some View {
+
+        VStack(spacing: 12) {
+
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.green)
+
+            Text(value)
+                .font(.title3)
+                .bold()
+
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(24)
+    }
+
+    // =======================================
+    // ACHIEVEMENT ROW
+    // =======================================
+
+    func achievementRow(
+        emoji: String,
+        title: String
+    ) -> some View {
+
+        HStack(spacing: 16) {
+
+            Circle()
+                .fill(Color.green.opacity(0.12))
+                .frame(width: 50, height: 50)
+                .overlay(
+
+                    Text(emoji)
+                        .font(.title3)
+                )
+
+            Text(title)
+                .bold()
+
+            Spacer()
+        }
+    }
 }
 
 // =======================================
-// SAVING GARDEN VIEW
+// saving-graden
 // =======================================
 
 struct SavingGardenView: View {
@@ -1237,11 +1387,35 @@ struct SavingGardenView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    // GARDEN LEVEL
+
+    var gardenLevel: String {
+
+        if totalSaved < 100 {
+
+            return "Seed 🌱"
+
+        } else if totalSaved < 300 {
+
+            return "Sprout 🌿"
+
+        } else if totalSaved < 700 {
+
+            return "Growing 🌳"
+
+        } else {
+
+            return "Forest 🍃"
+        }
+    }
+
     var body: some View {
 
         ScrollView(showsIndicators: false) {
 
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 26) {
+
+                // HEADER
 
                 HStack {
 
@@ -1253,6 +1427,7 @@ struct SavingGardenView: View {
 
                         Image(systemName: "chevron.left")
                             .foregroundColor(.black)
+                            .font(.title3)
                     }
 
                     Spacer()
@@ -1265,43 +1440,97 @@ struct SavingGardenView: View {
                 }
                 .padding(.top, 70)
 
-                VStack(spacing: 18) {
+                // MAIN GARDEN CARD
 
-                    Text("🎉 Rental Confirmed!")
+                VStack(spacing: 20) {
+
+                    Text("🌱 Sustainable Growth")
                         .font(.title2)
                         .bold()
 
-                    Text("You saved $65")
-                        .font(.title3)
-                        .bold()
-
-                    Text("🌱 Your garden has grown!")
-                        .foregroundColor(.green)
-
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(Color.green.opacity(0.08))
-                        .frame(height: 180)
+                    RoundedRectangle(cornerRadius: 30)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.green.opacity(0.12),
+                                    Color.mint.opacity(0.08)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(height: 240)
                         .overlay(
 
-                            VStack(spacing: 12) {
+                            VStack(spacing: 16) {
 
-                                Text("🌱 🌿 🌳")
-                                    .font(.system(size: 65))
+                                Text("🌱 🌷 🌿 🌳 🍃")
+                                    .font(.system(size: 58))
 
-                                Text("Your garden is evolving")
-                                    .foregroundColor(.green)
+                                Text(gardenLevel)
+                                    .font(.title3)
                                     .bold()
+                                    .foregroundColor(.green)
+
+                                Text("Your sustainable lifestyle is evolving")
+                                    .foregroundColor(.gray)
                             }
                         )
+
+                    Text("Every rental helps your garden grow and reduces unnecessary waste.")
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
                 }
-                .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.white)
                 .cornerRadius(32)
 
-                VStack(alignment: .leading, spacing: 14) {
+                // ECO LEVEL
 
-                    Text("Level: Growing 🌿")
+                VStack(alignment: .leading, spacing: 16) {
+
+                    HStack {
+
+                        Text("Eco Progress")
+                            .font(.headline)
+
+                        Spacer()
+
+                        Text("82%")
+                            .bold()
+                            .foregroundColor(.green)
+                    }
+
+                    GeometryReader { geo in
+
+                        ZStack(alignment: .leading) {
+
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color.gray.opacity(0.12))
+                                .frame(height: 14)
+
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            .green,
+                                            .mint
+                                        ],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .frame(
+                                    width: geo.size.width * 0.82,
+                                    height: 14
+                                )
+                        }
+                    }
+                    .frame(height: 14)
+
+                    Divider()
+
+                    Text("Garden Level: \(gardenLevel)")
                         .font(.title3)
                         .bold()
 
@@ -1309,12 +1538,105 @@ struct SavingGardenView: View {
                         .font(.title2)
                         .bold()
 
-                    Text("Every rental grows your sustainable garden and reduces waste.")
+                    Text("You are currently ranked in the top eco renters this month.")
                         .foregroundColor(.gray)
                 }
                 .padding()
                 .background(Color.white)
-                .cornerRadius(28)
+                .cornerRadius(30)
+
+                // PLANT COLLECTION
+
+                VStack(alignment: .leading, spacing: 18) {
+
+                    Text("Your Plant Collection")
+                        .font(.headline)
+                        .bold()
+
+                    plantCard(
+                        emoji: "🌷",
+                        amount: "$25",
+                        item: "Prada Jacket Rental",
+                        time: "3 days ago"
+                    )
+
+                    plantCard(
+                        emoji: "🌵",
+                        amount: "$18",
+                        item: "Retro Camera Rental",
+                        time: "1 week ago"
+                    )
+
+                    plantCard(
+                        emoji: "🌳",
+                        amount: "$22",
+                        item: "Party Speaker Rental",
+                        time: "2 weeks ago"
+                    )
+
+                    plantCard(
+                        emoji: "🍀",
+                        amount: "$15",
+                        item: "Wedding Decor Rental",
+                        time: "3 weeks ago"
+                    )
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(30)
+
+                // SUSTAINABILITY JOURNEY
+
+                VStack(alignment: .leading, spacing: 18) {
+
+                    Text("Your Sustainability Journey")
+                        .font(.headline)
+                        .bold()
+
+                    journeyRow(
+                        emoji: "🌱",
+                        title: "First rental completed",
+                        date: "March 2026"
+                    )
+
+                    journeyRow(
+                        emoji: "🌿",
+                        title: "Saved first $100",
+                        date: "April 2026"
+                    )
+
+                    journeyRow(
+                        emoji: "🌳",
+                        title: "Reduced 100kg carbon",
+                        date: "May 2026"
+                    )
+
+                    journeyRow(
+                        emoji: "🍃",
+                        title: "Reached Eco Level 8",
+                        date: "May 2026"
+                    )
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(30)
+
+                // MEMO
+
+                VStack(alignment: .leading, spacing: 12) {
+
+                    Text("🌱 Your Memo")
+                        .font(.headline)
+
+                    Text("Keep renting, keep growing!")
+                        .bold()
+
+                    Text("Small sustainable choices create long-term environmental impact.")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .background(Color.green.opacity(0.08))
+                .cornerRadius(24)
             }
             .padding()
             .padding(.bottom, 120)
@@ -1326,5 +1648,82 @@ struct SavingGardenView: View {
                 blue: 240/255
             )
         )
+    }
+
+    // =======================================
+    // PLANT CARD
+    // =======================================
+
+    func plantCard(
+        emoji: String,
+        amount: String,
+        item: String,
+        time: String
+    ) -> some View {
+
+        HStack(spacing: 16) {
+
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.green.opacity(0.1))
+                .frame(width: 75, height: 75)
+                .overlay(
+
+                    Text(emoji)
+                        .font(.title)
+                )
+
+            VStack(alignment: .leading, spacing: 6) {
+
+                Text("Saved \(amount)")
+                    .bold()
+
+                Text("From: \(item)")
+                    .foregroundColor(.gray)
+
+                Text(time)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+        }
+    }
+
+    // =======================================
+    // JOURNEY ROW
+    // =======================================
+
+    func journeyRow(
+        emoji: String,
+        title: String,
+        date: String
+    ) -> some View {
+
+        HStack(spacing: 16) {
+
+            Circle()
+                .fill(Color.green.opacity(0.12))
+                .frame(width: 54, height: 54)
+                .overlay(
+
+                    Text(emoji)
+                        .font(.title3)
+                )
+
+            VStack(alignment: .leading, spacing: 4) {
+
+                Text(title)
+                    .bold()
+
+                Text(date)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
+            Spacer()
+        }
     }
 }
