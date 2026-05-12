@@ -478,7 +478,6 @@ struct iPhoneFrame<Content: View>: View {
     let content: Content
 
     init(@ViewBuilder content: () -> Content) {
-
         self.content = content()
     }
 
@@ -486,45 +485,56 @@ struct iPhoneFrame<Content: View>: View {
 
         ZStack {
 
-            Color(
-                red: 248/255,
-                green: 245/255,
-                blue: 240/255
-            )
-            .ignoresSafeArea()
+            // Background
+
+            Color.black
+                .ignoresSafeArea()
 
             ZStack {
 
-                // IPHONE BODY
+                // iPhone 17 Pro Body
 
-                RoundedRectangle(cornerRadius: 60)
-                    .fill(Color.black)
-                    .frame(width: 410, height: 890)
-
-                // APP CONTENT
-
-                content
-                    .frame(width: 393, height: 852)
-                    .padding(.top, 12)
-                    .background(
-                        Color(
-                            red: 248/255,
-                            green: 245/255,
-                            blue: 240/255
+                RoundedRectangle(cornerRadius: 72)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 0.16, green: 0.16, blue: 0.18),
+                                Color.black
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
                     )
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 48)
+                    .frame(width: 440, height: 930)
+                    .shadow(
+                        color: .black.opacity(0.45),
+                        radius: 40,
+                        y: 20
                     )
 
-                // DYNAMIC ISLAND
+                // Screen
+
+                content
+                    .frame(width: 408, height: 884)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 58)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 58)
+                            .stroke(
+                                Color.white.opacity(0.06),
+                                lineWidth: 1
+                            )
+                    )
+
+                // Dynamic Island
 
                 VStack {
 
                     Capsule()
                         .fill(Color.black)
-                        .frame(width: 140, height: 36)
-                        .padding(.top, 12)
+                        .frame(width: 130, height: 36)
+                        .padding(.top, 16)
 
                     Spacer()
                 }
