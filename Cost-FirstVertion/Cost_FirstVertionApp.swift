@@ -87,21 +87,21 @@ struct MainTabView: View {
             ExploreView(totalSaved: $totalSaved)
                 .tabItem {
 
-                    Image(systemName: "safari")
+                    Image(systemName: "safari.fill")
                     Text("Explore")
                 }
 
             InboxView()
                 .tabItem {
 
-                    Image(systemName: "message")
+                    Image(systemName: "bubble.left.and.bubble.right.fill")
                     Text("Inbox")
                 }
 
             ProfileView(totalSaved: $totalSaved)
                 .tabItem {
 
-                    Image(systemName: "person")
+                    Image(systemName: "person.crop.circle.fill")
                     Text("Profile")
                 }
         }
@@ -112,6 +112,11 @@ struct MainTabView: View {
                 blue: 150/255
             )
         )
+        .safeAreaInset(edge: .bottom) {
+
+            Color.clear
+                .frame(height: 8)
+        }
     }
 }
 
@@ -287,8 +292,8 @@ struct ExploreView: View {
                     }
                 }
                 .padding()
-                .padding(.top, 55)
-                .padding(.bottom, 120)
+                .padding(.top, 20)
+                .padding(.bottom, 90)
             }
             .background(
                 Color(
@@ -400,7 +405,7 @@ struct ProductDetailView: View {
                 }
                 .padding()
             }
-            .padding(.bottom, 120)
+            .padding(.bottom, 90)
         }
         .background(
             Color(
@@ -488,14 +493,19 @@ struct iPhoneFrame<Content: View>: View {
             )
             .ignoresSafeArea()
 
-            ZStack(alignment: .top) {
+            ZStack {
+
+                // IPHONE BODY
 
                 RoundedRectangle(cornerRadius: 60)
                     .fill(Color.black)
-                    .frame(width: 410, height: 880)
+                    .frame(width: 410, height: 890)
+
+                // APP CONTENT
 
                 content
                     .frame(width: 393, height: 852)
+                    .padding(.top, 12)
                     .background(
                         Color(
                             red: 248/255,
@@ -504,13 +514,20 @@ struct iPhoneFrame<Content: View>: View {
                         )
                     )
                     .clipShape(
-                        RoundedRectangle(cornerRadius: 45)
+                        RoundedRectangle(cornerRadius: 48)
                     )
 
-                Capsule()
-                    .fill(Color.black)
-                    .frame(width: 140, height: 36)
-                    .padding(.top, 12)
+                // DYNAMIC ISLAND
+
+                VStack {
+
+                    Capsule()
+                        .fill(Color.black)
+                        .frame(width: 140, height: 36)
+                        .padding(.top, 12)
+
+                    Spacer()
+                }
             }
         }
     }
@@ -564,7 +581,7 @@ struct InboxView: View {
                         Image(systemName: "paperplane")
                             .font(.title2)
                     }
-                    .padding(.top, 95)
+                    .padding(.top, 30)
 
                     // CHAT LIST
 
@@ -626,7 +643,7 @@ struct InboxView: View {
                     }
                 }
                 .padding()
-                .padding(.bottom, 100)
+                .padding(.bottom, 90)
             }
             .background(
                 Color(
@@ -858,7 +875,7 @@ struct ProfileView: View {
 
                         Image(systemName: "gearshape")
                     }
-                    .padding(.top, 75)
+                    .padding(.top, 28)
 
                     // PROFILE CARD
 
@@ -1056,7 +1073,7 @@ struct ProfileView: View {
                     .cornerRadius(30)
                 }
                 .padding()
-                .padding(.bottom, 120)
+                .padding(.bottom, 90)
             }
             .background(
                 Color(
@@ -1639,7 +1656,7 @@ struct SavingGardenView: View {
                 .cornerRadius(24)
             }
             .padding()
-            .padding(.bottom, 120)
+            .padding(.bottom, 90)
         }
         .background(
             Color(
