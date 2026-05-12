@@ -199,8 +199,14 @@ struct ExploreView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
 
-                        Text("🌱 Saving Garden")
-                            .font(.headline)
+                        HStack(spacing: 8) {
+
+                            Image(systemName: "leaf.fill")
+                                .foregroundColor(.green)
+
+                            Text("Saving Garden")
+                        }
+                        .font(.headline)
 
                         Text("You saved $\(totalSaved)")
                             .font(.largeTitle)
@@ -277,8 +283,14 @@ struct ExploreView: View {
                                         }
                                     }
 
-                                    Text("🌿 Save \(product.carbonSaved)kg carbon")
-                                        .foregroundColor(.green)
+                                    HStack(spacing: 8) {
+
+                                        Image(systemName: "leaf.fill")
+                                            .foregroundColor(.green)
+
+                                        Text("Save \(product.carbonSaved)kg carbon")
+                                            .foregroundColor(.green)
+                                    }
 
                                     Text("Renting helps reduce fashion waste and unnecessary purchasing.")
                                         .foregroundColor(.gray)
@@ -438,14 +450,29 @@ struct RentConfirmationView: View {
 
             Spacer()
 
-            Text("🎉 Rental Confirmed!")
+            HStack(spacing: 12) {
+
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+
+                Text("Rental Confirmed!")
+            }
+            .font(.largeTitle)
+            .bold()
                 .font(.largeTitle)
                 .bold()
 
             Text("You saved $\(product.buyPrice - product.rentPrice)")
                 .font(.title2)
 
-            Text("🌱 Your garden has grown!")
+            HStack(spacing: 8) {
+
+                Image(systemName: "leaf.fill")
+                    .foregroundColor(.green)
+
+                Text("Your garden has grown!")
+                    .foregroundColor(.green)
+            }
                 .foregroundColor(.green)
 
             Button {
@@ -682,7 +709,7 @@ struct ChatDetailView: View {
         VStack(spacing: 0) {
 
             Spacer()
-                .frame(height: 65)
+                .frame(height: 12)
 
             // PRODUCT HEADER
 
@@ -731,7 +758,7 @@ struct ChatDetailView: View {
                     )
 
                     messageBubble(
-                        text: "Yes 😊 It's available Friday to Sunday.",
+                        text: "Yes! It's available Friday to Sunday.",
                         isUser: false
                     )
 
@@ -756,7 +783,7 @@ struct ChatDetailView: View {
                     )
 
                     messageBubble(
-                        text: "Great thank you 🙌 I'll confirm the booking tonight.",
+                        text: "Great thank you！ I'll confirm the booking tonight.",
                         isUser: true
                     )
                 }
@@ -912,8 +939,15 @@ struct ProfileView: View {
                                     .fill(Color.gray.opacity(0.25))
                                     .frame(width: 96, height: 96)
 
-                                Text("👩")
-                                    .font(.system(size: 46))
+                                Image(systemName: "person.crop.circle.fill")
+                                    .font(.system(size: 54))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.white, .gray.opacity(0.7)],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
                             }
                             .onTapGesture {
 
@@ -955,10 +989,9 @@ struct ProfileView: View {
 
                                     HStack {
 
-                                        Text("🌱")
+                                        Image(systemName: "leaf.fill")
 
-                                        Text("Saving Garden")
-                                            .font(.caption)
+                                        Text("Saving Garden")                                            .font(.caption)
                                             .bold()
                                     }
                                     .foregroundColor(.green)
@@ -1392,8 +1425,16 @@ struct SustainabilityImpactView: View {
                 .frame(width: 50, height: 50)
                 .overlay(
 
-                    Text(emoji)
-                        .font(.title3)
+                    Image(systemName:
+
+                        title.contains("Beginner") ? "sprout.fill" :
+
+                        title.contains("100kg") ? "leaf.fill" :
+
+                        "tree.fill"
+                    )
+                    .font(.title3)
+                    .foregroundColor(.green)
                 )
 
             Text(title)
@@ -1420,19 +1461,19 @@ struct SavingGardenView: View {
 
         if totalSaved < 100 {
 
-            return "Seed 🌱"
+            return "Seed Level"
 
         } else if totalSaved < 300 {
 
-            return "Sprout 🌿"
+            return "Sprout Level"
 
         } else if totalSaved < 700 {
 
-            return "Growing 🌳"
+            return "Growing Level"
 
         } else {
 
-            return "Forest 🍃"
+            return "Forest Level"
         }
     }
 
@@ -1471,7 +1512,15 @@ struct SavingGardenView: View {
 
                 VStack(spacing: 20) {
 
-                    Text("🌱 Sustainable Growth")
+                    HStack(spacing: 10) {
+
+                        Image(systemName: "leaf.fill")
+                            .foregroundColor(.green)
+
+                        Text("Sustainable Growth")
+                    }
+                    .font(.title2)
+                    .bold()
                         .font(.title2)
                         .bold()
 
@@ -1491,9 +1540,22 @@ struct SavingGardenView: View {
 
                             VStack(spacing: 16) {
 
-                                Text("🌱 🌷 🌿 🌳 🍃")
-                                    .font(.system(size: 58))
+                                HStack(spacing: 18) {
 
+                                    Image(systemName: "leaf.fill")
+                                    Image(systemName: "camera.macro")
+                                    Image(systemName: "tree.fill")
+                                    Image(systemName: "sparkles")
+                                    Image(systemName: "globe.europe.africa.fill")
+                                }
+                                .font(.system(size: 34))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.green, .mint],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
                                 Text(gardenLevel)
                                     .font(.title3)
                                     .bold()
@@ -1581,28 +1643,24 @@ struct SavingGardenView: View {
                         .bold()
 
                     plantCard(
-                        emoji: "🌷",
                         amount: "$25",
                         item: "Prada Jacket Rental",
                         time: "3 days ago"
                     )
 
                     plantCard(
-                        emoji: "🌵",
                         amount: "$18",
                         item: "Retro Camera Rental",
                         time: "1 week ago"
                     )
 
                     plantCard(
-                        emoji: "🌳",
                         amount: "$22",
                         item: "Party Speaker Rental",
                         time: "2 weeks ago"
                     )
 
                     plantCard(
-                        emoji: "🍀",
                         amount: "$15",
                         item: "Wedding Decor Rental",
                         time: "3 weeks ago"
@@ -1652,7 +1710,7 @@ struct SavingGardenView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
 
-                    Text("🌱 Your Memo")
+                    Text("Your Memo")
                         .font(.headline)
 
                     Text("Keep renting, keep growing!")
@@ -1682,7 +1740,6 @@ struct SavingGardenView: View {
     // =======================================
 
     func plantCard(
-        emoji: String,
         amount: String,
         item: String,
         time: String
@@ -1695,8 +1752,20 @@ struct SavingGardenView: View {
                 .frame(width: 75, height: 75)
                 .overlay(
 
-                    Text(emoji)
-                        .font(.title)
+                    Image(systemName:
+
+                        item.contains("Prada") ? "tshirt.fill" :
+
+                        item.contains("Camera") ? "camera.fill" :
+
+                        item.contains("Speaker") ? "speaker.wave.3.fill" :
+
+                        "party.popper.fill"
+                    )
+                    .font(.title2)
+                    .foregroundColor(.green)
+                        .font(.title2)
+                        .foregroundColor(.green)
                 )
 
             VStack(alignment: .leading, spacing: 6) {
@@ -1736,8 +1805,20 @@ struct SavingGardenView: View {
                 .frame(width: 54, height: 54)
                 .overlay(
 
-                    Text(emoji)
+                    Image(systemName:
+
+                        title.contains("First rental") ? "sparkles" :
+
+                        title.contains("$100") ? "dollarsign.circle.fill" :
+
+                        title.contains("carbon") ? "leaf.fill" :
+
+                        "globe.europe.africa.fill"
+                    )
+                    .font(.title3)
+                    .foregroundColor(.green)
                         .font(.title3)
+                        .foregroundColor(.green)
                 )
 
             VStack(alignment: .leading, spacing: 4) {
